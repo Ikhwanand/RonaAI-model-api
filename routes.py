@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, status, UploadFile, File, Request
 from fastapi.responses import JSONResponse, FileResponse
-from load_model import get_model_cache, visualize_prediction
+from load_model import get_model_cache
 import tempfile
 import os
 from pathlib import Path
