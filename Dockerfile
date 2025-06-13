@@ -12,7 +12,7 @@ COPY . .
 
 
 # Expose the port the app runs on 
-EXPOSE 8066
+EXPOSE 8099
 
 # Command to run the application
-CMD ["python", "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8066"]
+CMD ["python", "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8099"]
