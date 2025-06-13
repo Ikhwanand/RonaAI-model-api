@@ -1,8 +1,8 @@
 import json 
 import os 
 from PIL import Image
-import matplotlib.pyplot as plt 
-import matplotlib.patches as patches
+# import matplotlib.pyplot as plt 
+# import matplotlib.patches as patches
 from functools import lru_cache
 from typing import Optional
 from pathlib import Path
@@ -173,146 +173,146 @@ def get_model_cache() -> ModelCache:
     return ModelCache()
 
 
-def visualize_prediction(image_path, saved_path):
-    """
-    Demo menggunakan ProductionEnsembleModel dengan visualisasi custom
-    """
-    try:
-        # Load production model
-        production_model = get_model_cache().model
+# def visualize_prediction(image_path, saved_path):
+#     """
+#     Demo menggunakan ProductionEnsembleModel dengan visualisasi custom
+#     """
+#     try:
+#         # Load production model
+#         production_model = get_model_cache().model
         
-        # Periksa apakah model adalah instance dari DummyModel
-        is_dummy = isinstance(production_model, DummyModel)
+#         # Periksa apakah model adalah instance dari DummyModel
+#         is_dummy = isinstance(production_model, DummyModel)
         
-        # Get prediction
-        result = production_model.predict(image_path)
+#         # Get prediction
+#         result = production_model.predict(image_path)
         
-        # Load gambar
-        original_img = Image.open(image_path)
-        original_width, original_height = original_img.size
+#         # Load gambar
+#         original_img = Image.open(image_path)
+#         original_width, original_height = original_img.size
         
-        # Jika menggunakan dummy model, tambahkan peringatan
-        if is_dummy:
-            # Simpan gambar asli dengan peringatan
-            plt.figure(figsize=(10, 8))
-            plt.imshow(original_img)
-            plt.title('WARNING: Using Fallback Model', fontsize=16, color='red')
-            plt.text(10, 30, 'Model loading failed - using dummy predictions',
-                     fontsize=12, color='red', bbox=dict(facecolor='white', alpha=0.8))
-            plt.axis('off')
-            plt.tight_layout()
-            plt.savefig(saved_path, dpi=300, bbox_inches='tight')
-            plt.close()
-            return saved_path 
+#         # Jika menggunakan dummy model, tambahkan peringatan
+#         if is_dummy:
+#             # Simpan gambar asli dengan peringatan
+#             plt.figure(figsize=(10, 8))
+#             plt.imshow(original_img)
+#             plt.title('WARNING: Using Fallback Model', fontsize=16, color='red')
+#             plt.text(10, 30, 'Model loading failed - using dummy predictions',
+#                      fontsize=12, color='red', bbox=dict(facecolor='white', alpha=0.8))
+#             plt.axis('off')
+#             plt.tight_layout()
+#             plt.savefig(saved_path, dpi=300, bbox_inches='tight')
+#             plt.close()
+#             return saved_path 
         
-        # Create visualization
-        fig, axes = plt.subplots(1, 3, figsize=(12, 6))
+#         # Create visualization
+#         fig, axes = plt.subplots(1, 3, figsize=(12, 6))
         
-        # 1. Original image
-        axes[0].imshow(original_img)
-        axes[0].set_title('Original Image', fontsize=14, fontweight='bold')
-        axes[0].axis('off')
+#         # 1. Original image
+#         axes[0].imshow(original_img)
+#         axes[0].set_title('Original Image', fontsize=14, fontweight='bold')
+#         axes[0].axis('off')
         
-        # 2. Prediction results
-        axes[1].imshow(original_img)
+#         # 2. Prediction results
+#         axes[1].imshow(original_img)
         
-        # Bounding box
-        box_width = original_width * 0.7
-        box_height = original_height * 0.7
-        box_x = (original_width - box_width) / 2
-        box_y = (original_height - box_height) / 2
+#         # Bounding box
+#         box_width = original_width * 0.7
+#         box_height = original_height * 0.7
+#         box_x = (original_width - box_width) / 2
+#         box_y = (original_height - box_height) / 2
         
-        # Color based on confidence
-        confidence = result['confidence']
-        if confidence > 0.8:
-            color = 'green'
-            status = 'High Confidence'
-        elif confidence > 0.6:
-            color = 'orange'
-            status = 'Medium Confidence'
-        else:
-            color = 'red'
-            status = 'Low Confidence'
+#         # Color based on confidence
+#         confidence = result['confidence']
+#         if confidence > 0.8:
+#             color = 'green'
+#             status = 'High Confidence'
+#         elif confidence > 0.6:
+#             color = 'orange'
+#             status = 'Medium Confidence'
+#         else:
+#             color = 'red'
+#             status = 'Low Confidence'
             
-        # Add bounding box
-        rect = patches.Rectangle(
-            (box_x, box_y), box_width, box_height, 
-            linewidth=4, edgecolor=color, facecolor='none'
-        )
-        axes[1].add_patch(rect)
+#         # Add bounding box
+#         rect = patches.Rectangle(
+#             (box_x, box_y), box_width, box_height, 
+#             linewidth=4, edgecolor=color, facecolor='none'
+#         )
+#         axes[1].add_patch(rect)
         
-        # Label
-        main_label = f"{result['predicted_class']}\nConfidence: {confidence:.2%}\n{status}"
-        axes[1].text(
-            box_x, box_y - 20, main_label,
-            fontsize=12, fontweight='bold',
-            bbox=dict(boxstyle="round,pad=0.5", facecolor=color, alpha=0.8),
-            color='white'
-        )
+#         # Label
+#         main_label = f"{result['predicted_class']}\nConfidence: {confidence:.2%}\n{status}"
+#         axes[1].text(
+#             box_x, box_y - 20, main_label,
+#             fontsize=12, fontweight='bold',
+#             bbox=dict(boxstyle="round,pad=0.5", facecolor=color, alpha=0.8),
+#             color='white'
+#         )
         
-        axes[1].set_title(f'Prediction: {result["predicted_class"]} ({confidence:.2%})',
-                        fontsize=14, fontweight='bold')
-        axes[1].axis('off')
+#         axes[1].set_title(f'Prediction: {result["predicted_class"]} ({confidence:.2%})',
+#                         fontsize=14, fontweight='bold')
+#         axes[1].axis('off')
         
-        # 3. Detailed info
-        axes[2].axis('off')
+#         # 3. Detailed info
+#         axes[2].axis('off')
         
-        info_text = " ONNX ENSEMBLE MODEL\n"
-        info_text += "=" * 35 + "\n\n"
-        info_text += " PREDICTION RESULTS:\n"
-        info_text += f"   Class: {result['predicted_class']}\n"
-        info_text += f"   Confidence: {confidence:.2%}\n"
-        info_text += f"   Status: {status}\n\n"
+#         info_text = " ONNX ENSEMBLE MODEL\n"
+#         info_text += "=" * 35 + "\n\n"
+#         info_text += " PREDICTION RESULTS:\n"
+#         info_text += f"   Class: {result['predicted_class']}\n"
+#         info_text += f"   Confidence: {confidence:.2%}\n"
+#         info_text += f"   Status: {status}\n\n"
         
-        info_text += " TOP 5 PREDICTIONS:\n"
-        for i, (cls, conf) in enumerate(result['top_5_predictions'][:5]):
-            info_text += f"   {i+1}. {cls}: {conf:.2%}\n"
+#         info_text += " TOP 5 PREDICTIONS:\n"
+#         for i, (cls, conf) in enumerate(result['top_5_predictions'][:5]):
+#             info_text += f"   {i+1}. {cls}: {conf:.2%}\n"
         
         
-        axes[2].text(
-            0.05, 0.95, info_text,
-            transform=axes[2].transAxes,
-            fontsize=10,
-            verticalalignment='top',
-            fontfamily='monospace',
-            bbox=dict(boxstyle="round,pad=0.5", facecolor='lightgray', alpha=0.8)
-        )
+#         axes[2].text(
+#             0.05, 0.95, info_text,
+#             transform=axes[2].transAxes,
+#             fontsize=10,
+#             verticalalignment='top',
+#             fontfamily='monospace',
+#             bbox=dict(boxstyle="round,pad=0.5", facecolor='lightgray', alpha=0.8)
+#         )
         
-        axes[2].set_title('Detailed Results', fontsize=14, fontweight='bold')
+#         axes[2].set_title('Detailed Results', fontsize=14, fontweight='bold')
         
-        plt.tight_layout()
-        plt.savefig(saved_path, dpi=300, bbox_inches='tight')
-        plt.close()
+#         plt.tight_layout()
+#         plt.savefig(saved_path, dpi=300, bbox_inches='tight')
+#         plt.close()
         
-        return saved_path
+#         return saved_path
     
-    except Exception as e:
-        print(f"visualize_prediction error: {str(e)}")
-        try:
-            # Simpan gambar asli sebagai fallback dengan pesan error
-            original_img = Image.open(image_path)
-            plt.figure(figsize=(10, 8))
-            plt.imshow(original_img)
-            plt.title("ERROR: Visualization Failed", fontsize=16, color='red')
-            plt.text(10, 30, f"Error: {str(e)}", fontsize=12, color='red', 
-                     bbox=dict(facecolor='white', alpha=0.8))
-            plt.axis('off')
-            plt.tight_layout()
-            plt.savefig(saved_path, dpi=300, bbox_inches='tight')
-            plt.close()
-            print(f"Fallback: Saved error image to {saved_path}")
-            return saved_path
-        except Exception as fallback_error:
-            print(f"Fallback error: {str(fallback_error)}")
-            # Jika semua gagal, coba simpan gambar asli tanpa modifikasi
-            try:
-                original_img = Image.open(image_path)
-                original_img.save(saved_path)
-                print(f"Last resort fallback: Saved original image to {saved_path}")
-                return saved_path
-            except:
-                # Jika benar-benar gagal, kembalikan None dan biarkan endpoint menangani
-                return None
+#     except Exception as e:
+#         print(f"visualize_prediction error: {str(e)}")
+#         try:
+#             # Simpan gambar asli sebagai fallback dengan pesan error
+#             original_img = Image.open(image_path)
+#             plt.figure(figsize=(10, 8))
+#             plt.imshow(original_img)
+#             plt.title("ERROR: Visualization Failed", fontsize=16, color='red')
+#             plt.text(10, 30, f"Error: {str(e)}", fontsize=12, color='red', 
+#                      bbox=dict(facecolor='white', alpha=0.8))
+#             plt.axis('off')
+#             plt.tight_layout()
+#             plt.savefig(saved_path, dpi=300, bbox_inches='tight')
+#             plt.close()
+#             print(f"Fallback: Saved error image to {saved_path}")
+#             return saved_path
+#         except Exception as fallback_error:
+#             print(f"Fallback error: {str(fallback_error)}")
+#             # Jika semua gagal, coba simpan gambar asli tanpa modifikasi
+#             try:
+#                 original_img = Image.open(image_path)
+#                 original_img.save(saved_path)
+#                 print(f"Last resort fallback: Saved original image to {saved_path}")
+#                 return saved_path
+#             except:
+#                 # Jika benar-benar gagal, kembalikan None dan biarkan endpoint menangani
+#                 return None
 
 
 def validate_model():
